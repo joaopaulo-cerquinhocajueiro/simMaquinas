@@ -11,14 +11,13 @@ int amp;
 int center;
 int maxLength;
 int wireDistance;
-boolean a = false;
-boolean b = false;
-boolean c = false;
+boolean running = false;
+boolean a;
 
 
 void setup() {
   //fullScreen();
-  size(480, 740);
+  size(600, 480);
   center = 240;
   amp = (height-130)/3;
   wireDistance = 185;
@@ -87,8 +86,23 @@ void draw() {
   noStroke();
   rect(center+50,center-3,8,6);
   rect(center-50,center-3,-8,6);
- // b
-  angle=angle==359?0:angle+1;
+
+  // Update the angle
+  if(running){
+    angle=angle==359?0:angle+1;
+  }
+
+ // play/stop
+ stroke(0);
+ fill(200);
+ ellipse(540,100,60,60);
+ if(running){
+   fill(100)
+   rect(525,85,30,30);
+ } else {
+   fill(0,200,0);
+   triangle(528,83,528,117,560,100);
+ }
 }
 float distance(int x1, int y1, int x2, int y2){
  return sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
@@ -96,11 +110,8 @@ float distance(int x1, int y1, int x2, int y2){
 
 
 void mouseReleased(){
-  if(distance(mouseX,mouseY,2*center+200,height/4)<50){
-    a = !a;
-  }
-  if(distance(mouseX,mouseY,2*center+200,2*height/4)<50){
-    b = !b;
+  if(distance(mouseX,mouseY,540,100)<30){
+    running = !running;
   }
   if(distance(mouseX,mouseY,2*center+200,3*height/4)<50){
     c = !c;
