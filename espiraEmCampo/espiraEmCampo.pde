@@ -6,8 +6,8 @@
 float theta = 0.0;
 float r = 200;
 PVector ab,cd,vab,vcd;
-boolean play = true;
-
+boolean play = false;
+float thetaLineY;
 
 void setup() {
   size(800, 600);
@@ -26,23 +26,28 @@ void draw() {
   textSize(20);
   textAlign(LEFT);
   fill(0,200,0);
-  text("Velocidade",30,height/4);
+  text("Velocidade",10,0.1*height);
   fill(0,0,200);
-  text("Força",30,2*height/4);
+  text("Força",10,0.2*height);
   fill(200,0,0);
-  text("Corrente",30,3*height/4);
-  fill(0);
-  textAlign(CENTER);
-  text("Tensão induzida",width-155,height/4);
-  fill(245);
-  stroke(200);
-  strokeWeight(1);
-  rect(width-190,height/4+10,70,height/2-20);
-  stroke(205);
+  text("Corrente",10,0.3*height);
+  
   //Tensão induzida
+  fill(245);
+  strokeWeight(1);
+  stroke(0);
+  rect(5,0.35*height,155,0.57*height);
+  fill(0);
+  //textAlign(CENTER);
+  text("Tensão induzida",10,0.4*height);
+  fill(200);
+  stroke(100);
+  rect(45,0.43*height,70,height/2-20);
+  stroke(205);
   noStroke();
   fill(0,0,255);
-  rect(width-190,height/2,70,-(height/4-10)*sin(theta));
+  rect(45,(0.43+0.25)*height-10,70,-(height/4-10)*sin(theta));
+  
   //Círculo
   stroke(0);
   strokeWeight(1);
@@ -76,7 +81,70 @@ void draw() {
 //  point(cd.x,cd.y);
   
   if(play)
-    theta += 0.01;
+    theta = theta>=TWO_PI?0:theta+0.01;
+ // play/stop
+ stroke(0);
+ fill(200);
+ ellipse(700,100,60,60);
+ if(play){
+   fill(100)
+   rect(685,85,30,30);
+ } else {
+   fill(0,200,0);
+   triangle(688,83,688,117,720,100);
+ }
+
+ // Angle
+  //Tensão induzida
+  fill(245);
+  strokeWeight(1);
+  stroke(0);
+  rect(655,0.35*height,120,0.57*height);
+  fill(0);
+  //textAlign(CENTER);
+  text("Ângulo",674,0.4*height);
+  text("2π",745,0.43*height+6);
+  text("π",745,0.68*height-8);
+  text("0",745,0.93*height-14);
+  fill(200);
+  stroke(100);
+  rect(670,0.43*height,70,height/2-20);
+  stroke(50);
+  float helpLineY = 0.43*height+0.125*height-5;
+  line(670,helpLineY,740,helpLineY);  
+  helpLineY = 0.43*height+0.25*height-10;
+  line(670,helpLineY,740,helpLineY);  
+  helpLineY = 0.43*height+0.375*height-15;
+  line(670,helpLineY,740,helpLineY);  
+  if(mousePressed){
+    if((!play) && mouseX>668 && mouseX<742 && mouseY>0.43*height && mouseY<0.93*height-20){
+      theta = TWO_PI-(mouseY-0.43*height)*TWO_PI/(0.5*height-20);
+    }
+  }
+  thetaLineY = 0.93*height-20-(theta*(0.5*height-20)/TWO_PI);
+  if(play){
+    stroke(0);
+    strokeWeight(2);
+  } else {
+    stroke(200,0,0);
+    if(mouseX>668 && mouseX<742 && mouseY>thetaLineY-3 && mouseY<thetaLineY+3){
+      strokeWeight(6);
+    } else {
+      strokeWeight(4);
+    }
+  }
+  fill(0);
+  line(670,thetaLineY,740,thetaLineY);
+}
+
+float distance(int x1, int y1, int x2, int y2){
+ return sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+}
+
+void mouseReleased(){
+  if(distance(mouseX,mouseY,700,100)<30){
+    play = !play;
+  }
 }
 
 void keyPressed(){
