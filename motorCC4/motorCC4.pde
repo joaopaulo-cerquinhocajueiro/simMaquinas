@@ -8,7 +8,7 @@ float wireDistance;
 float esp_ang = TWO_PI/n_esp;
 float commutator_gap;
 float commutator_height;
-boolean play = true;
+boolean play = false;
 
 float brushHalfLength,brushLength;
 
@@ -16,7 +16,7 @@ PShape eind;
 
 void setup() {
   //fullScreen();
-  size(760, 600);
+  size(800, 600);
   center = height/2.8;
   brushHalfLength = 0.03*height;
   brushLength = 0.06*height;
@@ -63,6 +63,9 @@ void draw() {
   arc(center,center,120,120,PI-esp_ang/8,PI+esp_ang/8,OPEN);
   rect(center+60*cos(esp_ang/8),center-60*sin(esp_ang/8),-30,120*sin(esp_ang/8));
   rect(center-60*cos(esp_ang/8),center-60*sin(esp_ang/8),30,120*sin(esp_ang/8));
+  fill(255)
+  stroke(255);;
+  rect(center-60*cos(esp_ang/8)+30,center-60*sin(esp_ang/8),2*60*cos(esp_ang/8)-60,120*sin(esp_ang/8));
 // Texto da fiação do rotor
   textSize(12);
   textAlign(CENTER,CENTER);
@@ -160,6 +163,68 @@ void draw() {
   line(voltageLinePos,2.2*center,voltageLinePos,2.8*center);
   if(play)
     angle=angle>=TWO_PI?0.0:angle+(PI/360.0);
+ // play/stop
+ stroke(0);
+ fill(200);
+ ellipse(740,100,60,60);
+ if(play){
+   fill(100)
+   rect(725,85,30,30);
+ } else {
+   fill(0,200,0);
+   triangle(728,83,728,117,760,100);
+ }
+
+  // Angle
+  fill(245);
+  strokeWeight(1);
+  stroke(0);
+  rect(700,0.35*height,96,0.57*height);
+  fill(0);
+  //textAlign(CENTER);
+  text("Ângulo",748,0.4*height);
+  text("2π",787,0.43*height+6);
+  text("π",787,0.68*height-8);
+  text("0",787,0.93*height-14);
+  fill(200);
+  stroke(100);
+  rect(704,0.43*height,70,height/2-20);
+  stroke(50);
+  float helpLineY = 0.43*height+0.125*height-5;
+  line(704,helpLineY,774,helpLineY);  
+  helpLineY = 0.43*height+0.25*height-10;
+  line(704,helpLineY,774,helpLineY);  
+  helpLineY = 0.43*height+0.375*height-15;
+  line(704,helpLineY,774,helpLineY);  
+  if(mousePressed){
+    if((!play) && mouseX>668 && mouseX<742 && mouseY>0.43*height && mouseY<0.93*height-20){
+      angle = TWO_PI-(mouseY-0.43*height)*TWO_PI/(0.5*height-20);
+    }
+  }
+  thetaLineY = 0.93*height-20-(angle*(0.5*height-20)/TWO_PI);
+  if(play){
+    stroke(0);
+    strokeWeight(2);
+  } else {
+    stroke(200,0,0);
+    if(mouseX>668 && mouseX<742 && mouseY>thetaLineY-3 && mouseY<thetaLineY+3){
+      strokeWeight(6);
+    } else {
+      strokeWeight(4);
+    }
+  }
+  fill(0);
+  line(704,thetaLineY,774,thetaLineY);
+}
+
+float distance(int x1, int y1, int x2, int y2){
+ return sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+}
+
+void mouseReleased(){
+  if(distance(mouseX,mouseY,740,100)<30){
+    play = !play;
+  }
 }
 
 void keyPressed(){
