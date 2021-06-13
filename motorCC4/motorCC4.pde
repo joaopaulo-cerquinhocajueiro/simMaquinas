@@ -63,8 +63,8 @@ void draw() {
   arc(center,center,120,120,PI-esp_ang/8,PI+esp_ang/8,OPEN);
   rect(center+60*cos(esp_ang/8),center-60*sin(esp_ang/8),-30,120*sin(esp_ang/8));
   rect(center-60*cos(esp_ang/8),center-60*sin(esp_ang/8),30,120*sin(esp_ang/8));
-  fill(255)
-  stroke(255);;
+  fill(255);
+  stroke(255);
   rect(center-60*cos(esp_ang/8)+30,center-60*sin(esp_ang/8),2*60*cos(esp_ang/8)-60,120*sin(esp_ang/8));
 // Texto da fiação do rotor
   textSize(12);
