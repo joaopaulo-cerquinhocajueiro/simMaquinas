@@ -21,6 +21,14 @@ void setup() {
   //Fcd = new PVector(0.0,+0.5*r);
 }
 
+void seta(float x1, float x2, float y){
+  float setaX = (x2 - x1)/10;
+  float setaY = setaX/2;
+  line(x1,y,x2,y);
+  line(x2 - setaX, y + setaY, x2, y);
+  line(x2 - setaX, y - setaY, x2, y);
+}
+
 void draw() {
   background(255);
   textSize(20);
@@ -28,10 +36,20 @@ void draw() {
   fill(0,200,0);
   text("Velocidade",10,0.1*height);
   fill(0,0,200);
-  text("Força",10,0.2*height);
+  text("Força",10,0.17*height);
   fill(200,0,0);
-  text("Corrente",10,0.3*height);
+  text("Corrente",10,0.24*height);
+  fill(200,200,0);
+  text("Campo",10,0.31*height);
   
+  //Campo magnético
+  stroke(255,255,0);
+  strokeWeight(1);
+  float deltaSeta = height/10;
+  for (int i = 0; i<8; i++){
+      seta(170,630,deltaSeta*(i+1.5));
+  }
+
   //Tensão induzida
   fill(245);
   strokeWeight(1);
@@ -94,8 +112,7 @@ void draw() {
    triangle(688,83,688,117,720,100);
  }
 
- // Angle
-  //Tensão induzida
+  // Angle
   fill(245);
   strokeWeight(1);
   stroke(0);
