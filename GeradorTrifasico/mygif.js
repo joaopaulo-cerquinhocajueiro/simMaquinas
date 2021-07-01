@@ -1,6 +1,6 @@
 var myGif = null;
 var gifFrames = null;
-var gifLink = "./geradorLR.gif";
+var gifLink = "./GeradorTrifasico/geradorLR.gif";
 var svg;
 var anguloSlider;
 var ckA,ckB,ckC;
@@ -24,7 +24,11 @@ function setup() {
     ckA = document.getElementById('ckA');
     ckB = document.getElementById('ckB');
     ckC = document.getElementById('ckC');
-    document.getElementById('play').addEventListener('click',function(){playing = !playing;},false);
+    document.getElementById('play').addEventListener('click',function(){
+        playing = !playing;
+        this.classList.toggle('pause');
+        // console.log(this.classList);
+    },false);//
     frameRate(15);
 }
 
@@ -102,8 +106,4 @@ function draw() {
     }
     stroke(100);
     line(0+angulo*350/360,340,0+angulo*350/360,500);
-}
-
-function mouseClicked(){
-    console.log(mouseX,mouseY);
 }

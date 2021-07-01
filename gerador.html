@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Campo em Gerador Trifásico</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.3.1/lib/p5.js"></script>
+	<script src="https://unpkg.com/p5.gif/dist/p5gif.min.js"></script>
+    <!-- <script src="https://unpkg.com/p5.js-svg@1.0.8"></script> -->
+    <script src="GeradorTrifasico/mygif.js"></script>
+    <link rel="stylesheet" type="text/css" href="GeradorTrifasico/stylesheet.css"/>
+    <link href="./simMaquinas.css" rel="stylesheet" type="text/css" media="all">
+
+</head>
+<body>
+    <a href="./index.html"><h1>Uma coleção de pequenos simuladores para estudo de máquinas elétricas</h1>
+    </a>
+    <p>Prof. João Paulo Cerquinho Cajueiro</p>
+    <p>Universidade Federal de Pernambuco</p>
+ 
+    <a href="./alternados.html"></a><h2>Máquinas de corrente alternada</h2>
+    <h3>Fluxo em gerador síncrono</h3>
+    <p>Um rotor com campo magnético gera um fluxo alternado em 3 bobinas de estator defasadas de 120° mecânicos. Como a tensão é proporcional à derivada do fluxo, isto gera uma tensão defasada de 120°.</p>
+    
+    <div class='flex-container'>
+        <div id="p5gif"></div>
+        <div class='sliderBox'>
+            <input type="button" id="play" name="play" class="play"></input>
+            <label for="angulo">Ângulo:</label>
+            <input type="range" id="angulo" name="angulo" min="0" max="359"></input>
+            <label for="ckA">Fase A</label>
+            <input type="checkbox" id="ckA" name="ckA"></input>
+            <label for="ckA">Fase B</label>
+            <input type="checkbox" id="ckB" name="ckB"></input>
+            <label for="ckA">Fase C</label>
+            <input type="checkbox" id="ckC" name="ckC"></input>
+        </div>
+    </div>
+    <p> A simulação demora para carregar. Favor esperar.</p>
+</body>
+</html>
