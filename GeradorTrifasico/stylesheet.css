@@ -1,0 +1,25 @@
+input[type=range] {
+  position: relative;
+  height: 29px;
+  /* -webkit-appearance: none; */
+  /* margin: 10px 0; */
+  width: 100px;
+  /* transform-origin: bottom center; */
+  /* transform: rotate(270deg); */
+}
+
+.flex-container{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-around;
+    /* background-color: chocolate; */
+    align-items:center;
+}
+
+.sliderBox{
+    display: flex;
+    height: 320 px;
+    flex-direction: column;
+    /* background-color: cornflowerblue; */
+    position: relative;
+}
