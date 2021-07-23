@@ -29,7 +29,7 @@ function setup() {
   center = height/2.0;
   wireDistance = 0.95*center;
   background(255);
-  fill(255,255,0);
+  noFill();
 
   document.getElementById('play').addEventListener('click',function(){
     playing = !playing;
@@ -77,8 +77,8 @@ function draw() {
 //   angleSync=angleSync>=TAU?TAU/300.0:angleSync+TAU/300.0;
 //   angleASync=angleASync>=TAU?slip*TAU/300.0:angleASync+slip*TAU/300.0;
   var tau = s==0.0?0.0:(0.76/pow((1 + 0.08/s),4))/s;
-  //torque.setValue(tau);
-  //potencia.setValue(slip*tau/0.79);
+  var potencia = slip*tau/0.79;
+
   switch(referencial){
   case(0): angEstator = 0.0;
            angCampo = angleSync*TAU/400;
@@ -96,8 +96,24 @@ function draw() {
 
   background(255);
 
+  // Torque e potência
+  stroke(0);
+  strokeWeight(1);
+  rect(410,40,30,320);
+  rect(460,40,30,320);
   noStroke();
-  fill(120);
+  fill(0);
+  textAlign(CENTER);
+  text("Torque",425,35);
+  text("Potência",475,35);
+  
+  noStroke();
+  fill(50,50,165);
+  if(playing){
+    rect(410, 360 - 320*tau, 30, 320*tau);
+    rect(460, 360 - 320*potencia, 30, 320*potencia);  
+  }
+  
 
   stroke(0);
   strokeWeight(1);
