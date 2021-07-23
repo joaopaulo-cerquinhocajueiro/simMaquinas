@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Motor de indução trifásico</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.3.1/lib/p5.js"></script>
+	<!-- <script src="https://unpkg.com/p5.gif/dist/p5gif.min.js"></script> -->
+    <!-- <script src="https://unpkg.com/p5.js-svg@1.0.8"></script> -->
+    <script src="inducao/sketch.js"></script>
+    <link rel="stylesheet" type="text/css" href="inducao/stylesheet.css"/>
+    <link href="./simMaquinas.css" rel="stylesheet" type="text/css" media="all">
+
+</head>
+<body>
+    <a href="./index.html"><h1>Uma coleção de pequenos simuladores para estudo de máquinas elétricas</h1>
+    </a>
+    <p>Prof. João Paulo Cerquinho Cajueiro</p>
+    <p>Universidade Federal de Pernambuco</p>
+ 
+    <a href="./alternados.html"></a><h2>Máquinas de corrente alternada</h2>
+    <h3>Motor de indução trifásico</h3>
+    <p>Este campo girante gera um torque em uma bobina em gaiola, que é o princípio de funcionamento do motor de indução.</p>
+    
+    <div class='flex-container'>
+        <div id="sketchDiv"></div>
+        <div class='sliderBox'>
+            <input type="button" id="play" name="play" class="play"></input>
+            <label for="angulo">Escorregamento:</label>
+            <input type="range" id="s" name="s" min="0" max="100"></input>
+            <label for="cbEstator">Estator</label>
+            <input type="checkbox" id="cbEstator" name="cbEstator"></input>
+            <label for="cbRotor">Rotor</label>
+            <input type="checkbox" id="cbRotor" name="cbRotor"></input>
+            <label for="cbCampo">Campo</label>
+            <input type="checkbox" id="cbCampo" name="cbCampo"></input>
+        </div>
+    </div>
+    <!-- <p> A simulação demora para carregar. Favor esperar.</p> -->
+</body>
+</html>
