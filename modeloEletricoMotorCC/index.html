@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Dados simulados de motor CC">
+<meta name="author" content="João Paulo Cerquinho Cajueiro">
+<link href="../simMaquinas.css" rel="stylesheet" type="text/css" media="all">
+<title>Dados simulados de motor CC</title>
+</head>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+<script language="javascript" type="text/javascript" src="FileSaver.min.js"></script>
+<script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+<script src="motorCCsim.js"></script>
+<body>
+    <div class="">
+        <a href="index.html"><h1>Uma coleção de pequenos simuladores para estudo de máquinas elétricas</h1>
+        </a>
+        <p>Prof. João Paulo Cerquinho Cajueiro</p>
+        <p>Universidade Federal de Pernambuco</p>
+        <h1>Modelo Elétrico de Motos CC</h1>
+       </div>
+       <div class="flex-container">
+           <div id="tipo", class="menuBox",style="width: 30%;">
+                <div>
+                    <input type="checkbox" id="ishunt" name="tipo" value="ishunt" checked></input>
+                    <label for="ishunt">Resistor shunt</label>
+                </div>
+                <div>
+                   <input type="number" id="ivalueRs" name="ivalueRs" value="10"></input>
+                   <label for="ivalueRs">Valor do resistor shunt [Ω]</label>
+               </div>
+               <div>
+                <input type="number" id="ivalueRa" name="ivalueRa" value="12"></input>
+                <label for="ivalueRa">Valor do resistor de armadura [Ω]</label>
+            </div>
+            <div>
+                <input type="number" id="ivalueLa" name="ivalueLa" value="1000"></input>
+                <label for="ivalueLa">Valor do indutor de armadura [μH]</label>
+            </div>
+            <div>
+                <input type="number" id="ivalueRc" name="ivalueRc" value="100"></input>
+                <label for="ivalueRs">Valor da resistência de carga [Ω]</label>
+            </div>
+            <div>
+                <input type="number" id="ivalueCi" name="ivalueRc" value="1000"></input>
+                <label for="ivalueCi">Valor da capacitância de inércia [μF]</label>
+            </div>
+            <div>
+                <input type="number" id="ivalueVcc" name="ivalueVcc" value="12"></input>
+                <label for="ivalueVcc">Valor da tensão usada no teste [V]</label>
+            </div>
+            <input type="button" id='saveBtn' value="Salvar"></input>
+        </div>
+        <div id="circuit", style="height:230px">
+            <object data="motor.svg" type="image/svg+xml"
+                id="motor" width="100%" viewbox="0 0 100 100"></object>
+        </div>
+        <div id='chartDiv', style="width: 640px;">
+            <canvas id="simChart" width="6" height="4"></canvas>
+        </div>
+        <div class="texto">
+            <p>Este sistema simula o acionamento de um motor CC de imã permanente com o chaveamento direto da tensão sobre ele. Ele simula o fechamento da chave no momento 0 e gera as curvas do transitório de tensão e corrente sobre o motor.</p>
+            <p> O resistor \(R_S\) é um resistor shunt, usado para medição da corrente num motor real.</p>
+            <p>A resistência de armadura \(R_A\) e a indutância de armadura \(L_A\) são parâmetros elétricos do enrolamento de armadura do motor.</p>
+            <p>Já a resistência \(R_C\) e a capacitância \(C_i\), são modelos elétricos da resistência mecânica \(D\) e da inércia \(J_M\), respectivamente, do conjunto rotor-carga:</p>
+            \[R_C = {K^2 \over D}\]
+            \[C_i = K^2J_M\]
+            onde \(K\) é a constante do motor.
+       </div>
+    </div>
+    <div class="footer">Feito por João Paulo Cerquinho Cajueiro. <a href="LICENSE.txt">Licença de uso.</a></div>
+</body>
