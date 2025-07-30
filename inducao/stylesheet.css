@@ -3,13 +3,13 @@ input[type=range] {
   height: 29px;
   /* -webkit-appearance: none; */
   /* margin: 10px 0; */
-  width: 100px;
+  width: 200px;
   /* transform-origin: bottom center; */
   /* transform: rotate(270deg); */
 }
 
-.flex-container{
-    width: 600px;
+.MotorView{
+    grid-area: MotorView;
     display:flex;
     flex-direction: row;
     justify-content: space-around;
@@ -29,7 +29,7 @@ input[type=range] {
 
 input[type=button].play{
   box-sizing: border-box;
-  height: 60px;
+  height: 30px;
   
   border-color: transparent transparent transparent #2020E2;
   transition: 100ms all ease;
@@ -37,11 +37,59 @@ input[type=button].play{
   cursor: pointer;
 
   border-style: solid;
-  border-width: 30px 0 30px 50px;
+  border-width: 15px 0 15px 25px;
 }
 
 input[type=button].pause {
   border-color: transparent transparent transparent #202020;
   border-style: double;
-  border-width: 0px 0 0px 50px;
+  border-width: 0px 0 0px 25px;
+}
+
+.container {
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  grid-template-rows: 1fr 1fr; 
+  gap: 0px 0px; 
+  grid-template-areas: 
+    "MotorView Params"
+    "PowerTorque Efficiency"; 
+}
+.Params { grid-area: Params; }
+.PowerTorque { grid-area: PowerTorque; }
+.Efficiency { grid-area: Efficiency; }
+
+.chart-container {
+    position: relative;
+    height: 400px;
+    width: 100%;
+}
+
+.parameters {
+    background: #5a5a5a;
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.param-group {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+}
+
+.param-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ffd700;
+}
+
+.param-value {
+    font-size: 1.1em;
+    margin: 5px 0;
 }

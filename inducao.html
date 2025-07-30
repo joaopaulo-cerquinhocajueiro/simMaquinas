@@ -3,9 +3,12 @@
 <head>
 	<title>Motor de indução trifásico</title>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.3.1/lib/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
 	<!-- <script src="https://unpkg.com/p5.gif/dist/p5gif.min.js"></script> -->
     <!-- <script src="https://unpkg.com/p5.js-svg@1.0.8"></script> -->
     <script src="inducao/sketch.js"></script>
+    <script src="inducao/plots.js"></script>
     <link rel="stylesheet" type="text/css" href="inducao/stylesheet.css"/>
     <link href="./simMaquinas.css" rel="stylesheet" type="text/css" media="all">
 
@@ -20,20 +23,68 @@
     <h3>Motor de indução trifásico</h3>
     <p>Este campo girante gera um torque em uma bobina em gaiola, que é o princípio de funcionamento do motor de indução.</p>
     
-    <div class='flex-container'>
-        <div id="sketchDiv"></div>
-        <div class='sliderBox'>
-            <input type="button" id="play" name="play" class="play"></input>
-            <label for="angulo">Escorregamento:</label>
-            <input type="range" id="s" name="s" min="0" max="100"></input>
-            <label for="cbEstator">Estator</label>
-            <input type="checkbox" id="cbEstator" name="cbEstator"></input>
-            <label for="cbRotor">Rotor</label>
-            <input type="checkbox" id="cbRotor" name="cbRotor"></input>
-            <label for="cbCampo">Campo</label>
-            <input type="checkbox" id="cbCampo" name="cbCampo"></input>
+    <div class="container">
+        <div class="MotorView">
+            <div id="sketchDiv"></div>
+            <div class='sliderBox'>
+                <input type="button" id="play" name="play" class="play"></input>
+                <label for="slipSlider">Escorregamento (s)</label>
+                <input type="range" id="slipSlider" min="0.00" max="1" step="0.001" value="0.05">
+                <label for="cbEstator">Estator</label>
+                <input type="checkbox" id="cbEstator" name="cbEstator"></input>
+                <label for="cbRotor">Rotor</label>
+                <input type="checkbox" id="cbRotor" name="cbRotor"></input>
+                <label for="cbCampo">Campo</label>
+                <input type="checkbox" id="cbCampo" name="cbCampo"></input>
+            </div>
+        </div>
+
+        <div class="parameters">
+                        <div class="param-group">
+                <div class="param-title">Parâmetros Elétricos</div>
+                <div class="param-value">Escorregamento: <span id="slipValue">0</span></div>
+                <div class="param-value">Potência Entrada: <span id="inputPower">0</span> W</div>
+                <div class="param-value">Potência Entreferro: <span id="airgapPower">0</span> W</div>
+                <div class="param-value">Potência Convertida: <span id="convertedPower">0</span> W</div>
+            </div>
+            
+            <div class="param-group">
+                <div class="param-title">Perdas</div>
+                <div class="param-value">Cobre Estator: <span id="statorLoss">0</span> W</div>
+                <div class="param-value">Ferro: <span id="ironLoss">0</span> W</div>
+                <div class="param-value">Cobre Rotor: <span id="rotorLoss">0</span> W</div>
+            </div>
+            
+            <div class="param-group">
+                <div class="param-title">Características Mecânicas</div>
+                <div class="param-value">Torque: <span id="torque">0</span> N.m</div>
+                <div class="param-value">Velocidade: <span id="speed">0</span> rpm</div>
+                <div class="param-value">Rendimento: <span id="efficiency">0</span>%</div>
+            </div>
+        </div>
+        
+        <div class="PowerTorque">
+            <div class="chart-wrapper">
+                <div class="chart-title">Características do Motor</div>
+                <div class="chart-container">
+                    <canvas id="characteristicsChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="Efficiency">
+            <div class="chart-wrapper">
+                <div class="chart-title">Diagrama de Perdas (Waterfall)</div>
+                <div class="chart-container">
+                    <canvas id="waterfallChart"></canvas>
+                </div>
+            </div>
         </div>
     </div>
+    <div class='flex-container'>
+        
+    </div>
+
     <!-- <p> A simulação demora para carregar. Favor esperar.</p> -->
 </body>
 </html>

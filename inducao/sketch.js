@@ -62,11 +62,11 @@ cbCampo.addEventListener("click",()=>{
     cbEstator.checked = false;
     },false);
  
-escorregamento = document.getElementById("s");
+escorregamento = document.getElementById("slipSlider");
 }
 
 function draw() {
-  var s = escorregamento.value/100.0;
+  var s = escorregamento.value;
   slip = 1.0 - s;
   //velocidade.setValue(slip);
   if(playing){

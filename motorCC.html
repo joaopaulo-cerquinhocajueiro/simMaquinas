@@ -18,10 +18,21 @@
    Da mesma forma, uma corrente passando por esta espira gera forças ortogonais tanto à corrente quanto ao campo. O próprio movimento da espira gera um torque senoidal.
    </p>
    <canvas data-processing-sources="espiraEmCampo/espiraEmCampo.pde"></canvas>
+
+      <h3>Espira num rotor ferromagnético</h3> 
+   <p>Para aumentar o fluxo magnético, o rotor é feito de material ferromagnético. Nesta condição o fluxo se distribue com densidade constante em volta do rotor, ficando sempre ortogonal à superfície deste.</p>
+   <img src="espiraNoRotor/SimulacaoFluxoRotor.png" width="800" alt="Fluxo no rotor">   
+   <p>Uma espira em torno deste rotor girando em torno do eixo gera uma tensão pulsada, constante enquanto na face de um polo e invertendo entre os polos.
+   </p>
+   <p>Da mesma forma, a corrente passando por esta espira gera forças ortogonais tanto à corrente quanto ao campo, mas como agora o campo fica ortogonal ao movimento do condutor, gera-se um torque constante enquanto na face de um polo e invertendo quando a espira passa de um polo para o outro..
+   </p>
+   <canvas data-processing-sources="espiraNoRotor/espiraNoRotor.pde"></canvas>
+
    <h3>Espira num rotor com comutador</h3>
    <p>Um comutador inverte a espira sempre que o condutor está entre os polos, que é a posição onde o campo cai para zero e não há tensão induzida.</p>
    <canvas data-processing-sources="motorCC2/motorCC2.pde"></canvas>
    <h3>Motor de 2 polos, 4 espiras</h3>
+   
    <canvas data-processing-sources="motorCC4/motorCC4.pde"></canvas>
    <h3>Motor de 2 polos, 8 espiras</h3>
    <canvas data-processing-sources="motorCC8/motorCC8.pde"></canvas>
