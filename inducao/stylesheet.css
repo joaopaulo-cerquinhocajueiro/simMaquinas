@@ -17,6 +17,10 @@ input[type=range] {
     align-items:center;
 }
 
+#sketchDiv canvas {
+  border: none;
+}
+
 .sliderBox{
     display: flex;
     height: 320 px;

@@ -22,20 +22,21 @@ var playing = false;
 
 function setup() {
   //fullScreen();
-  var thisCanvas = createCanvas(500, 400);
+  var thisCanvas = createCanvas(400, 400);
   thisCanvas.parent('sketchDiv');
   // font = loadFont("motorInducao/data/ArialMT-12.vlw");
   //size(800, 600);
   center = height/2.0;
-  wireDistance = 0.95*center;
+  wireDistance = 0.99*center;
   background(255);
   noFill();
 
-  document.getElementById('play').addEventListener('click',function(){
-    playing = !playing;
-    this.classList.toggle('pause');
-    // console.log(this.classList);
-    },false);//
+  // document.getElementById('play').addEventListener('click',function(){
+  //   playing = !playing;
+  //   this.classList.toggle('pause');
+  //   // console.log(this.classList);
+  //   },false);//
+  playing = true;
 cbEstator = document.getElementById("cbEstator");
 cbEstator.checked = true;
 cbRotor = document.getElementById("cbRotor");
@@ -70,8 +71,8 @@ function draw() {
   slip = 1.0 - s;
   //velocidade.setValue(slip);
   if(playing){
-    angleSync=angleSync>=399?0:angleSync+1;
-    angleASync=angleASync>=399?0:angleASync+slip;
+    angleSync=angleSync>=399?0:angleSync+1.5;
+    angleASync=angleASync>=399?0:angleASync+(1.5*slip);
     // console.log(angleSync,angleASync,(angleSync-angleASync)%400);
   }
 //   angleSync=angleSync>=TAU?TAU/300.0:angleSync+TAU/300.0;
@@ -96,29 +97,29 @@ function draw() {
 
   background(255);
 
-  // Torque e potência
-  stroke(0);
-  strokeWeight(1);
-  rect(410,40,30,320);
-  rect(460,40,30,320);
-  noStroke();
-  fill(0);
-  textAlign(CENTER);
-  text("Torque",425,35);
-  text("Potência",475,35);
+  // // Torque e potência
+  // stroke(0);
+  // strokeWeight(1);
+  // rect(410,40,30,320);
+  // rect(460,40,30,320);
+  // noStroke();
+  // fill(0);
+  // textAlign(CENTER);
+  // text("Torque",425,35);
+  // text("Potência",475,35);
   
-  noStroke();
-  fill(50,50,165);
-  if(playing){
-    rect(410, 360 - 320*tau, 30, 320*tau);
-    rect(460, 360 - 320*potencia, 30, 320*potencia);  
-  }
+  // noStroke();
+  // fill(50,50,165);
+  // if(playing){
+  //   rect(410, 360 - 320*tau, 30, 320*tau);
+  //   rect(460, 360 - 320*potencia, 30, 320*potencia);  
+  // }
   
 
   stroke(0);
   strokeWeight(1);
   fill(200);
-  wireDistance = 1.90*center;
+  wireDistance = 1.9*center;
   ellipse(center,center,wireDistance,wireDistance);
   fill(255);
   wireDistance = 1.60*center;
