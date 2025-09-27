@@ -161,7 +161,9 @@ function calculateTransformerParameters(n1_n2_ratio, R1, X1, R2, X2, Rc, Xm, V1_
         // Atualiza o svg
         updateSvg(results);
     }
-    
+    var firstRun = true;
+    var myChart;
+
     function drawWaveforms(results, V1_amplitude, V1_phase) {
         var ctx = document.getElementById('simChart').getContext('2d');
         const plugin = {
@@ -194,8 +196,9 @@ function calculateTransformerParameters(n1_n2_ratio, R1, X1, R2, X2, Rc, Xm, V1_
         // Secondary current waveform
         const I2_phase_rad = results.I2_phase_deg * Math.PI / 180;
         const I2_waveform = ts.map(t => results.I2_amplitude * Math.sin(2 * Math.PI * 60 * t + I2_phase_rad));
-
-        var myChart = new Chart(ctx, {
+        if (firstRun==true){
+            firstRun = false;
+            myChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: ts,
@@ -261,6 +264,20 @@ function calculateTransformerParameters(n1_n2_ratio, R1, X1, R2, X2, Rc, Xm, V1_
             },
             plugins:[plugin]
         });
+        } else {
+            myChart.data.labels = ts;
+            myChart.data.datasets[0].data = V1_waveform;
+            myChart.data.datasets[1].data = I1_waveform;
+            myChart.data.datasets[2].data = V2_waveform;
+            myChart.data.datasets[3].data = I2_waveform;
+            myChart.update();
+            const ctx = myChart.canvas.getContext('2d');
+            ctx.save();
+            ctx.globalCompositeOperation = 'destination-over';
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, myChart.width, myChart.height);
+            ctx.restore();}
+
     }
 
     // const canvas = document.getElementById('waveformCanvas');
@@ -403,7 +420,6 @@ function calculateTransformerParameters(n1_n2_ratio, R1, X1, R2, X2, Rc, Xm, V1_
     //         ctx.fillText(timeMs.toFixed(1), x, height - margin + 15);
     //     }
     // }
-
     calculateAndDisplay();
     // document.getElementById("calculate-btn").onclick = calculateAndDisplay;
     
