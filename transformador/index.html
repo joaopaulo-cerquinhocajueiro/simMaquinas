@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Dados simulados de motor CC">
+<meta name="author" content="João Paulo Cerquinho Cajueiro">
+<link href="../simMaquinas.css" rel="stylesheet" type="text/css" media="all">
+<title>Parâmetros do Transformador</title>
+</head>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+<script src="transformer_model.js"></script>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <style>
+        .layout {
+        width: 100%;
+        display: grid;
+        grid:
+            "Entradas Circuito" 
+            "Saidas Grafico"
+            / 1fr 2fr;
+        gap: 8px;
+        }
+
+        .Entradas { grid-area: Entradas; }
+
+        .Circuito { 
+            grid-area: Circuito; 
+            text-align: center;
+            display: flex;
+            justify-content: center; /* centraliza no eixo horizontal */
+            align-items: center;     /* centraliza no eixo vertical */      
+        }
+        #transformer{
+            display: inline-block;
+        }
+
+        .Circuito object {
+            width: 95%;
+            height: auto;
+            display: inline-block;
+        }
+
+        .Saidas { grid-area: Saidas; }
+        .Grafico { 
+            grid-area: Grafico; 
+            text-align: center;
+        }
+
+        #chartDiv {
+            display: inline-block;
+        }
+
+         .input-group {
+            margin-bottom: 1px;
+        }
+        
+        .input-group label {
+            margin-bottom: 1px;
+            color: #000000;
+            font-size: 16px;
+        }
+        
+        .input-group input {
+            width: 80px;
+            padding: 5px 6px;
+            border: 1px solid #ced4da;
+            border-radius: 1px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+        
+        .saidas {
+            background-color: #f8f9fa;
+            padding: 0px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .results-panel h3 {
+            color: #495057;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 10px;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .result-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .result-item h4 {
+            margin: 0 0 10px 0;
+            color: #495057;
+            font-size: 14px;
+        }
+        
+        .result-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+
+
+<body>
+    <div class="">
+        <a href="../index.html"><h1>Uma coleção de pequenos simuladores para estudo de máquinas elétricas</h1>
+        </a>
+        <p>Prof. João Paulo Cerquinho Cajueiro</p>
+        <p>Universidade Federal de Pernambuco</p>
+        <h1>Simulação de Transformador com Carga</h1>
+    </div>
+    <div class="layout">
+        <div class="Entradas">
+            <h3>Parâmetros do Transformador</h3>
+            <div id="tipo", class="menuBox",style="width: 30%;">
+                <div class="input-group">
+                    <input type="number" id="in1_n2_ratio" name="in1_n2_ratio" value="10" step="0.1">
+                    <label for="in1_n2_ratio">Relação n1/n2</label>
+                </div>
+                
+                <div class="input-group">
+                    <input type="number" id="iRp" value="0.1" step="0.01">
+                    <label for="iRp">Resistência do pprimário Rp [Ω]</label>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="iXp" value="0.2" step="0.01">
+                    <label for="iXp">Reatância de dispersão do primário Xp [Ω]</label>
+                        
+                </div>
+                <div class="input-group">
+                    <input type="number" id="iRs" value="0.01" step="0.001">
+                    <label for="iRs">Resistência do secundário Rs [Ω]</label>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="iXs" value="0.02" step="0.001">
+                    <label for="iXs">Reatância de dispersão do secundário Xs [Ω]</label>
+                </div>
+                
+                <div class="input-group">
+                    <input type="number" id="iRc" value="100" step="1">
+                    <label for="iRc">Resistência do núcleo Rc [Ω]</label>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="iXm" value="50" step="1">
+                    <label for="iXm">Reatância de magnetização Xm [Ω]</label>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="iVp" value="220" step="1">
+                    <label for="iVp">Tensão no primário Vp [V]</label>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="iRl" value="1" step="0.1">
+                    <label for="iRl">Resistência da carga [Ω]</label>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="iXl" value="0.5" step="0.1">
+                    <label for="iXl">Reatância da carga [Ω]</label>
+                </div>
+               
+            </div>
+        </div>
+            
+        <div class="Circuito", id="transformer_div">
+            <object data="transformador.svg" type="image/svg+xml"
+                id="transformer" width="100%" viewbox="0 0 120 100"></object>
+        </div>
+
+        <div class="Saidas">
+            <h3>Resultados</h3>
+            <div class="results-grid">
+                <div class="result-item">
+                    <h4>Corrente do Primário (I1)</h4>
+                    <div class="result-value" id="I1_result">-</div>
+                </div>
+                <div class="result-item">
+                    <h4>Corrente do Secundário (I2)</h4>
+                    <div class="result-value" id="I2_result">-</div>
+                </div>
+                <div class="result-item">
+                    <h4>Tensão do Secundário (V2)</h4>
+                    <div class="result-value" id="V2_result">-</div>
+                </div>
+                <div class="result-item">
+                    <h4>Potência da Carga</h4>
+                    <div class="result-value" id="P_load_result">-</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="Grafico">
+            <h3>Gráfico das Correntes e Tensões</h3>
+             <div id='chartDiv', style="width: 800px;">
+                <canvas id="simChart" width="6" height="4"></canvas>
+            </div>
+        </div>
+        
+    </div>
+        
+        <div class="description">
+            <h3>Sobre a Simulação</h3>
+            <p>Este sistema simula o comportamento de um transformador com carga, considerando o modelo completo com as resistências e reatâncias de dispersão dos enrolamentos primário e secundário, bem como os parâmetros do núcleo (resistência de perdas no ferro e reatância de magnetização).</p>
+            <p>Os parâmetros R1 e X1 representam a resistência e reatância de dispersão do enrolamento primário. R2 e X2 são os parâmetros correspondentes do secundário. Rc modela as perdas no ferro do núcleo, enquanto Xm representa a reatância de magnetização.</p>
+            <p>A simulação calcula as correntes do primário e secundário, bem como a tensão no secundário, considerando a carga conectada. O gráfico mostra as formas de onda senoidais das grandezas calculadas.</p>
+        </div>
+    </div>
+    
+</body>
+</html>
