@@ -1,6 +1,7 @@
 var myGif = null;
 var gifFrames = null;
-var gifLink = "./GeradorTrifasico/geradorLR.gif";
+let gifLoaded = false;
+var gifLink = "./GeradorTrifasico/gerador.gif";
 var svg;
 var anguloSlider;
 var ckA,ckB,ckC;
@@ -9,12 +10,13 @@ var playing = false;
 
 function setup() {
     // Create canvas
-    var thisCanvas = createCanvas(350, 520);
+    var thisCanvas = createCanvas(717, 848);
     thisCanvas.parent('p5gif');
     fill(0);
     text("Loading...",200,200);
     myGif = p5Gif.loadGif(gifLink, function(){
         gifFrames = myGif.frames;
+        gifLoaded = true;
     });
     // svg = loadSVG('./fluxogerador.svg', function(svg) {
     //     image(svg, 50, 50, 600, 200);
@@ -29,7 +31,7 @@ function setup() {
         this.classList.toggle('pause');
         // console.log(this.classList);
     },false);//
-    frameRate(15);
+    frameRate(3);
 }
 
 function drawSine(theta,x0,y0,w,h){
@@ -46,10 +48,12 @@ function drawSine(theta,x0,y0,w,h){
 }
 
 function draw() {
-    var angulo = anguloSlider.value;
+    background(255);
+    // Get angle from slider
+    var angulo = parseInt(anguloSlider.value);
     if(playing){
-        angulo++;
-        if (angulo>=359){
+        angulo = angulo + 5;
+        if (angulo>=355){
             angulo = 0;
         }
         anguloSlider.value = angulo;
@@ -59,51 +63,60 @@ function draw() {
  
     // console.log(ckA.value);
 
-    if(myGif.isLoading){
+    if(!gifLoaded){
         console.log("Loading");
     }else{
-        image(gifFrames[document.getElementById('angulo').value],0,0);
+        let imgIndex = parseInt(angulo/5) %(gifFrames.length);
+        console.log(angulo,imgIndex);
+        image(gifFrames[imgIndex],0,0);
     }
+
+    // Separador
     strokeWeight(1);
     stroke(50);
-    line(0,420,350,420);
+    line(0,648,717,648);
+    // Textos
     fill(0);
-    text("Fluxo",2,360);
-    text("concatenado",2,370);
-    text("ângulo",165,515);
+    text("Fluxo",2,660);
+    text("concatenado",2,670);
+    text("ângulo",165,775);
+
+    // Marcação das bobinas e senoides
     if(ckA.checked){
-        strokeWeight(2);
-        stroke(0,0,200);
-        drawSine(0,0,340,350,160);
-        line(150,  88, 189,  88);
-        line(116, 107, 224, 107);    
-        line( 95, 143, 244, 143);
-        line( 95, 182, 244, 182);
-        line(150, 236, 189, 236);
-        line(116, 217, 224, 217);        
+        strokeWeight(3);
+        stroke(0,0,255);
+        drawSine(0,10,680,700,160);
+        line(303, 183, 376, 183);
+        line(236, 221, 440, 221);    
+        line(198, 287, 479, 287);
+        line(198, 363, 479, 363);
+        line(236, 428, 440, 428);    
+        line(303, 465, 376, 465);
     }
     if(ckB.checked){
-        strokeWeight(2);
-        stroke(200,0,0);
-        drawSine(TWO_PI/3,0,340,350,160);
-        line( 96, 143, 115, 108);
-        line( 96, 182, 150,  88);    
-        line(115, 217, 188,  88);
-        line(150, 235, 225, 108);
-        line(188, 235, 244, 143);
-        line(225, 217, 244, 182);        
+        strokeWeight(3);
+        stroke(255,0,0);
+        drawSine(TWO_PI/3,10,680,700,160);
+        line(198, 287, 236, 221);
+        line(198, 363, 303, 183);
+        line(236, 428, 376, 183);
+        line(303, 465, 440, 221);
+        line(440, 428, 479, 363);    
+        line(376, 465, 479, 287);
     }
     if(ckC.checked){
         strokeWeight(2);
         stroke(0,200,0);
-        drawSine(2*TWO_PI/3,0,340,350,160);
-        line( 96, 182, 115, 217);
-        line( 96, 143, 150, 235);    
-        line(115, 108, 188, 235);
-        line(150,  88, 225, 217);
-        line(188,  88, 244, 182);
-        line(225, 108, 244, 143);        
+        drawSine(2*TWO_PI/3,10,680,700,160);
+        line(440, 221, 479, 287);
+        line(376, 183, 479, 363);
+        line(303, 183, 440, 428);
+        line(236, 221, 376, 465);
+        line(198, 287, 303, 465);
+        line(198, 363, 236, 428);
     }
+    // Linha do ângulo
+    strokeWeight(1);
     stroke(100);
-    line(0+angulo*350/360,340,0+angulo*350/360,500);
+    line(10+angulo*700/360,675,10+angulo*700/360,845);
 }
