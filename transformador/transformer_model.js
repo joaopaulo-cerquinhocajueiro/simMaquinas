@@ -125,17 +125,17 @@ function calculateTransformerParameters(n1_n2_ratio, R1, X1, R2, X2, Rc, Xm, V1_
     
     function calculateAndDisplay() {
         // Obter valores dos inputs
-        const n1_n2_ratio = parseFloat(document.getElementById('in1_n2_ratio').value);
-        const R1 = parseFloat(document.getElementById('iRp').value);
-        const X1 = parseFloat(document.getElementById('iXp').value);
-        const R2 = parseFloat(document.getElementById('iRs').value);
-        const X2 = parseFloat(document.getElementById('iXs').value);
-        const Rc = parseFloat(document.getElementById('iRc').value);
-        const Xm = parseFloat(document.getElementById('iXm').value);
-        const V1_amplitude = parseFloat(document.getElementById('iVp').value);
+        const n1_n2_ratio = parseEngNotation(document.getElementById('in1_n2_ratio').value);
+        const R1 = parseEngNotation(document.getElementById('iRp').value);
+        const X1 = parseEngNotation(document.getElementById('iXp').value);
+        const R2 = parseEngNotation(document.getElementById('iRs').value);
+        const X2 = parseEngNotation(document.getElementById('iXs').value);
+        const Rc = parseEngNotation(document.getElementById('iRc').value);
+        const Xm = parseEngNotation(document.getElementById('iXm').value);
+        const V1_amplitude = parseEngNotation(document.getElementById('iVp').value);
         const V1_phase = 0.0;
-        const R_load = parseFloat(document.getElementById('iRl').value);
-        const X_load = parseFloat(document.getElementById('iXl').value);
+        const R_load = parseEngNotation(document.getElementById('iRl').value);
+        const X_load = parseEngNotation(document.getElementById('iXl').value);
         
         // Calcular resultados
         const results = calculateTransformerParameters(
@@ -151,9 +151,17 @@ function calculateTransformerParameters(n1_n2_ratio, R1, X1, R2, X2, Rc, Xm, V1_
         document.getElementById('V2_result').innerHTML = 
             `${results.V2_amplitude.toFixed(3)} V<br><small>${results.V2_phase_deg.toFixed(1)}°</small>`;
         
+        // Calcular potência da fonte
+        const P_source = results.I1_amplitude * V1_amplitude * Math.cos((results.I1_phase_deg - V1_phase) * Math.PI / 180);
+        document.getElementById('P_source_result').innerHTML = `${P_source.toFixed(3)} W`;
+
         // Calcular potência da carga
         const P_load = results.I2_amplitude * results.I2_amplitude * R_load;
         document.getElementById('P_load_result').innerHTML = `${P_load.toFixed(3)} W`;
+        
+        // Calcular eficiência
+        const efficiency = (P_load / P_source) * 100;
+        document.getElementById('eff_result').innerHTML = `${efficiency.toFixed(2)} %`;
         
         // Desenhar gráfico
         drawWaveforms(results, V1_amplitude, V1_phase);

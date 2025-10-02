@@ -11,6 +11,7 @@
 </head>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+<script src="../parseEngNotation.js"></script>
 <script src="transformer_model.js"></script>
 
 <!DOCTYPE html>
@@ -136,46 +137,46 @@
             <h3>Parâmetros do Transformador</h3>
             <div id="tipo", class="menuBox",style="width: 30%;">
                 <div class="input-group">
-                    <input type="number" id="in1_n2_ratio" name="in1_n2_ratio" value="10" step="0.1">
+                    <input id="in1_n2_ratio" name="in1_n2_ratio" value="10" step="0.1">
                     <label for="in1_n2_ratio">Relação n1/n2</label>
                 </div>
                 
                 <div class="input-group">
-                    <input type="number" id="iRp" value="0.1" step="0.01">
+                    <input id="iRp" value="0.1" step="0.01">
                     <label for="iRp">Resistência do pprimário Rp [Ω]</label>
                 </div>
                 <div class="input-group">
-                    <input type="number" id="iXp" value="0.2" step="0.01">
+                    <input id="iXp" value="0.2" step="0.01">
                     <label for="iXp">Reatância de dispersão do primário Xp [Ω]</label>
                         
                 </div>
                 <div class="input-group">
-                    <input type="number" id="iRs" value="0.01" step="0.001">
+                    <input id="iRs" value="0.01" step="0.001">
                     <label for="iRs">Resistência do secundário Rs [Ω]</label>
                 </div>
                 <div class="input-group">
-                    <input type="number" id="iXs" value="0.02" step="0.001">
+                    <input id="iXs" value="0.02" step="0.001">
                     <label for="iXs">Reatância de dispersão do secundário Xs [Ω]</label>
                 </div>
                 
                 <div class="input-group">
-                    <input type="number" id="iRc" value="100" step="1">
+                    <input id="iRc" value="100" step="1">
                     <label for="iRc">Resistência do núcleo Rc [Ω]</label>
                 </div>
                 <div class="input-group">
-                    <input type="number" id="iXm" value="50" step="1">
+                    <input id="iXm" value="50" step="1">
                     <label for="iXm">Reatância de magnetização Xm [Ω]</label>
                 </div>
                 <div class="input-group">
-                    <input type="number" id="iVp" value="220" step="1">
+                    <input id="iVp" value="220" step="1">
                     <label for="iVp">Tensão no primário Vp [V]</label>
                 </div>
                 <div class="input-group">
-                    <input type="number" id="iRl" value="1" step="0.1">
+                    <input id="iRl" value="1" step="0.1">
                     <label for="iRl">Resistência da carga [Ω]</label>
                 </div>
                 <div class="input-group">
-                    <input type="number" id="iXl" value="0.5" step="0.1">
+                    <input id="iXl" value="0.5" step="0.1">
                     <label for="iXl">Reatância da carga [Ω]</label>
                 </div>
                
@@ -203,8 +204,16 @@
                     <div class="result-value" id="V2_result">-</div>
                 </div>
                 <div class="result-item">
+                    <h4>Potência da Fonte</h4>
+                    <div class="result-value" id="P_source_result">-</div>
+                </div>
+                <div class="result-item">
                     <h4>Potência da Carga</h4>
                     <div class="result-value" id="P_load_result">-</div>
+                </div>
+                <div class="result-item">
+                    <h4>Eficiência</h4>
+                    <div class="result-value" id="eff_result">-</div>
                 </div>
             </div>
         </div>
@@ -220,9 +229,9 @@
         
         <div class="description">
             <h3>Sobre a Simulação</h3>
-            <p>Este sistema simula o comportamento de um transformador com carga, considerando o modelo completo com as resistências e reatâncias de dispersão dos enrolamentos primário e secundário, bem como os parâmetros do núcleo (resistência de perdas no ferro e reatância de magnetização).</p>
-            <p>Os parâmetros R1 e X1 representam a resistência e reatância de dispersão do enrolamento primário. R2 e X2 são os parâmetros correspondentes do secundário. Rc modela as perdas no ferro do núcleo, enquanto Xm representa a reatância de magnetização.</p>
-            <p>A simulação calcula as correntes do primário e secundário, bem como a tensão no secundário, considerando a carga conectada. O gráfico mostra as formas de onda senoidais das grandezas calculadas.</p>
+            <p>Este sistema simula o comportamento de um transformador com carga, considerando o modelo completo linear</p>
+            <p>Os parâmetros R1 e X1 representam a resistência e reatância de dispersão do enrolamento primário. R2 e X2 são os parâmetros correspondentes do secundário. Rc modela as perdas no ferro do núcleo (histerese e Foucault), enquanto Xm representa a reatância de magnetização. O modelo é linear, logo a distorção da corrente de magnetização por conta da saturação não aparece</p>
+            <p>A simulação calcula as correntes do primário e secundário e a tensão no secundário, considerando a carga conectada. O gráfico mostra as formas de onda senoidais das grandezas calculadas.</p>
         </div>
     </div>
     
