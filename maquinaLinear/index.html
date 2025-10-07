@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulação de Máquina Linear</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1><a href="https://joaopaulo-cerquinhocajueiro.github.io/simMaquinas/" target="_blank">Uma coleção de pequenos simuladores para estudo de máquinas elétricas</a></h1>
+        <p>Prof. João Paulo Cerquinho Cajueiro</p>
+        <p>Universidade Federal de Pernambuco</p>
+    </header>
+
+    <main>
+        <h2>Simulação de Máquina Linear</h2>
+        
+        <div class="container">
+            <div class="parameters-section">
+                <h3>Parâmetros da Máquina Linear</h3>
+                
+                <div class="parameters-grid">
+                    <div class="parameter">
+                        <label for="VB">Tensão da bateria V<sub>B</sub> [V]</label>
+                        <input type="range" id="VB" min="0" max="1000" value="220" step="1">
+                        <span id="VB-value">220</span>
+                    </div>
+
+                    <div class="parameter">
+                        <label for="Fapl">Força aplicada F<sub>apl</sub> [N]</label>
+                        <input type="range" id="Fapl" min="-5" max="5" value="0" step="0.1">
+                        <span id="Fapl-value">0</span>
+                    </div>
+
+                    <div class="parameter">
+                        <label for="R">Resistência R [Ω]</label>
+                        <input type="range" id="R" min="0.1" max="10" value="1.0" step="0.1">
+                        <span id="R-value">1.0</span>
+                    </div>
+
+                    <div class="parameter">
+                        <label for="B">Campo Magnético B [T]</label>
+                        <input type="range" id="B" min="0.1" max="2.0" value="0.5" step="0.1">
+                        <span id="B-value">0.5</span>
+                    </div>
+
+                    <div class="parameter">
+                        <label for="l">Comprimento l [m]</label>
+                        <input type="range" id="l" min="0.01" max="1" value="0.1" step="0.01">
+                        <span id="l-value">0.1</span>
+                    </div>
+
+                    <div class="parameter">
+                        <label for="m">Massa m [kg]</label>
+                        <input type="range" id="m" min="0.1" max="10" value="0.5" step="0.1">
+                        <span id="m-value">0.5</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="diagram-section">
+                <h3>Diagrama da Máquina Linear</h3>
+                <div id="diagram">
+                    <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Trilhos -->
+                        <line x1="50" y1="100" x2="550" y2="100" stroke="#333" stroke-width="4"/>
+                        <line x1="50" y1="200" x2="550" y2="200" stroke="#333" stroke-width="4"/>
+                        
+                        <!-- Barra móvel -->
+                        <rect x="280" y="90" width="20" height="120" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+                        
+                        <!-- Campo magnético (símbolos) -->
+                        <text x="150" y="150" font-size="40" fill="#3498db">⊗</text>
+                        <text x="200" y="150" font-size="40" fill="#3498db">⊗</text>
+                        <text x="250" y="150" font-size="40" fill="#3498db">⊗</text>
+                        <text x="350" y="150" font-size="40" fill="#3498db">⊗</text>
+                        <text x="400" y="150" font-size="40" fill="#3498db">⊗</text>
+                        <text x="450" y="150" font-size="40" fill="#3498db">⊗</text>
+                        
+                        <!-- Bateria -->
+                        <circle cx="100" cy="250" r="30" fill="none" stroke="#333" stroke-width="2"/>
+                        <line x1="100" y1="235" x2="100" y2="245" stroke="#333" stroke-width="3"/>
+                        <line x1="95" y1="240" x2="105" y2="240" stroke="#333" stroke-width="3"/>
+                        <line x1="100" y1="255" x2="100" y2="265" stroke="#333" stroke-width="3"/>
+                        <text x="85" y="290" font-size="14" fill="#333">V<tspan baseline-shift="sub">B</tspan></text>
+                        
+                        <!-- Conexões -->
+                        <line x1="100" y1="220" x2="100" y2="100" stroke="#333" stroke-width="2"/>
+                        <line x1="100" y1="280" x2="100" y2="200" stroke="#333" stroke-width="2"/>
+                        
+                        <!-- Resistência -->
+                        <path d="M 450 100 L 460 90 L 480 110 L 500 90 L 520 110 L 530 100" 
+                              fill="none" stroke="#333" stroke-width="2"/>
+                        <text x="470" y="80" font-size="14" fill="#333">R</text>
+                        
+                        <!-- Seta de velocidade -->
+                        <line x1="290" y1="50" x2="340" y2="50" stroke="#27ae60" stroke-width="3" marker-end="url(#arrowhead)"/>
+                        <text x="300" y="40" font-size="16" fill="#27ae60" font-weight="bold">v</text>
+                        
+                        <!-- Seta de força -->
+                        <line x1="310" y1="150" x2="360" y2="150" stroke="#e67e22" stroke-width="3" marker-end="url(#arrowhead2)"/>
+                        <text x="320" y="140" font-size="16" fill="#e67e22" font-weight="bold">F</text>
+                        
+                        <!-- Definições de setas -->
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#27ae60"/>
+                            </marker>
+                            <marker id="arrowhead2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#e67e22"/>
+                            </marker>
+                        </defs>
+                        
+                        <!-- Labels -->
+                        <text x="280" y="230" font-size="14" fill="#333">B (entrando)</text>
+                        <text x="20" y="150" font-size="14" fill="#333">l</text>
+                    </svg>
+                </div>
+            </div>
+        
+        </div>
+        <div class="container2">
+
+            <div class="results-section">
+                <h3>Resultados</h3>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <h4>Velocidade Final</h4>
+                        <p id="v-final">-</p>
+                    </div>
+                    <div class="result-item">
+                        <h4>Corrente Final</h4>
+                        <p id="i-final">-</p>
+                    </div>
+                    <div class="result-item">
+                        <h4>Força Induzida Final</h4>
+                        <p id="F-final">-</p>
+                    </div>
+                    <div class="result-item">
+                        <h4>Potência Elétrica Final</h4>
+                        <p id="Pel-final">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="graphs-section">
+               
+                <!-- <div class="graph-container"> -->
+                    <div id="graph1" class="graph"></div>
+                <!-- </div> -->
+                
+                <!-- <div class="graph-container"> -->
+                    <div id="graph2" class="graph"></div>
+                <!-- </div> -->
+                
+                <!-- <div class="graph-container"> -->
+                    <div id="graph3" class="graph"></div>
+                <!-- </div> -->
+            </div>
+        
+        </div>
+
+        <div class="about-section">
+            <h3>Sobre a Simulação</h3>
+            <p>
+                Este sistema simula o comportamento de uma <strong>máquina linear</strong>, que é um dispositivo eletromagnético 
+                onde uma barra condutora se move sobre trilhos paralelos em um campo magnético uniforme.
+            </p>
+            <p>
+                As equações fundamentais que governam o sistema são:
+            </p>
+            <ul>
+                <li><strong>Força induzida:</strong> F<sub>ind</sub> = i × l × B</li>
+                <li><strong>Segunda lei de Newton:</strong> F<sub>t</sub> = F<sub>ind</sub> + F<sub>apl</sub> = m × a</li>
+                <li><strong>Tensão induzida (Lei de Faraday):</strong> e<sub>ind</sub> = v × B × l</li>
+                <li><strong>Lei de Ohm:</strong> V<sub>B</sub> = e<sub>ind</sub> + i × R</li>
+            </ul>
+            <p>
+                A simulação resolve numericamente essas equações ao longo do tempo, mostrando como a velocidade, 
+                corrente, força e potência evoluem. Os parâmetros podem ser ajustados em tempo real para explorar 
+                diferentes cenários operacionais.
+            </p>
+        </div>
+    </main>
+
+    <footer>
+        <p>Desenvolvido para fins educacionais - UFPE</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
