@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Dados simulados de motor CC">
+    <meta name="author" content="João Paulo Cerquinho Cajueiro">
+    <link href="../simMaquinas.css" rel="stylesheet" type="text/css" media="all">
+    <title>Máquinas Síncronas - Fasores</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="header">
+        <a href="../index.html"><h1>Uma coleção de pequenos simuladores para estudo de máquinas elétricas</h1>
+        </a>
+        <p>Prof. João Paulo Cerquinho Cajueiro</p>
+        <p>Universidade Federal de Pernambuco</p>
+        <h1>Máquinas Síncronas - Fasores</h1>
+       </div>
+       <div class="flex-container">
+
+        <div class="controls">
+            <h2>Configuração</h2>
+            <label>Modo de Operação</label>
+            <select id="mode">
+                <option value="inf_bus_gen">Gerador (Barramento Infinito)</option>
+                <option value="inf_bus_mot">Motor (Barramento Infinito)</option>
+                <option value="isolated_gen">Gerador Isolado</option>
+            </select>
+            <div id="dynamic-inputs"></div>
+            <div class="stats" id="stats"></div>
+        </div>
+
+        <div class="canvas-container">
+            <h2 id="display-title">Diagrama Fasorial</h2>
+            <svg id="svgMain" viewBox="0 0 500 500">
+                <defs>
+                    <marker id="head-blue" markerWidth="5" markerHeight="7" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="blue" /></marker>
+                    <marker id="head-red" markerWidth="5" markerHeight="7" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="red" /></marker>
+                    <marker id="head-green" markerWidth="5" markerHeight="7" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="green" /></marker>
+                    <marker id="head-orange" markerWidth="5" markerHeight="7" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="orange" /></marker>
+                </defs>
+                <g id="drawGroup" transform="translate(50, 250) scale(1, -1)">
+                    <line x1="-100" y1="0" x2="600" y2="0" stroke="#eee" />
+                    <line x1="0" y1="-250" x2="0" y2="250" stroke="#eee" />
+                    <g id="vectors"></g>
+                </g>
+            </svg>
+        </div>
+       </div>
+    </div>
+
+<script src="script.js"></script>
+</body>
+</html>
