@@ -96,17 +96,19 @@ function calculateMotorParams(slip) {
 // Função para gerar dados das características
 function generateCharacteristicsData() {
     const slips = [];
+    const nms = [];
     const torques = [];
     const powers = [];
     
-    for (let s = 0.001; s <= 1; s += 0.01) {
+    for (let s = 1; s >= 0.01; s -= 0.01) {
         const params = calculateMotorParams(s);
         slips.push(s);
+        nms.push(1800*(1-s)); // Velocidade mecânica
         torques.push(params.torque);
         powers.push(params.convertedPower);
     }
     
-    return { slips, torques, powers };
+    return { slips, nms, torques, powers };
 }
 
 // Função para criar o gráfico de características
@@ -117,7 +119,7 @@ function createCharacteristicsChart() {
     characteristicsChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: data.slips.map(s => s.toFixed(3)),
+            labels: data.nms.map(nm => nm.toFixed(0)),
             datasets: [{
                 label: 'Torque (N.m)',
                 data: data.torques,
@@ -151,7 +153,7 @@ function createCharacteristicsChart() {
                     display: true,
                     title: {
                         display: true,
-                        text: 'Escorregamento',
+                        text: 'Velocidade Mecânica (rpm)',
                         font: { weight: 'bold' }
                     }
                 },
@@ -299,7 +301,7 @@ function updateCharacteristicsPoint(slip) {
     });
     
     // Encontra o índice mais próximo do slip atual
-    const slipIndex = Math.round(slip * 100 - 0.1);
+    const slipIndex = Math.round(100-(slip * 100 - 0.1));
     
     // Adiciona ponto destacado
     if (slipIndex >= 0 && slipIndex < characteristicsChart.data.datasets[0].data.length) {
