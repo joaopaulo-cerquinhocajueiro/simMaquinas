@@ -16,6 +16,7 @@ window.addEventListener("load", function() {
     var valueVcc = 12;
     // var svgvalueK = svgObject.getElementById('valueK');
     var valueK = 0.12;
+    var valueTs = 4.0;
     var ia,nm;
     
     var ishunt = this.document.getElementById('ishunt');
@@ -33,6 +34,7 @@ window.addEventListener("load", function() {
     svgvalueVcc.innerHTML = ivalueVcc.value + " V";
     var ivalueK = this.document.getElementById('ivalueK');
     // svgvalueK.innerHTML = ivalueK.value;
+    var ivalueTs = this.document.getElementById('ivalueTs');
 
     function runSimAndUpdate(){
         ia, nm = solveIaNm();
@@ -103,14 +105,21 @@ window.addEventListener("load", function() {
         // console.log(svgvalueRs, e.target.value);
     });
 
+    ivalueTs.addEventListener('change',(e)=>{
+        valueTs = parseFloat(e.target.value);
+        // svgvalueK.innerHTML = e.target.value;
+        runSimAndUpdate();
+        // console.log(svgvalueRs, e.target.value);
+    });
+
     // Create simulated date
     function range(start, end, step) {
         return (new Array(parseInt((end - start)/step) + 1)).fill(undefined).map((_, i) => (i + start)*step);
     }
 
 
-    ts = range(0,0.3,0.0001);
     function solveIaNm() {
+        ts = range(0,valueTs,valueTs/1000);
         var R1;
         if(ishunt.checked){
             R1 = valueRa + valueRs;
