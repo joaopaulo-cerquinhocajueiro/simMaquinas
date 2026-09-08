@@ -14,7 +14,9 @@ window.addEventListener("load", function() {
     var valueCi = 1000;
     var svgvalueVcc = svgObject.getElementById('valueVcc');
     var valueVcc = 12;
-    var ia,vm;
+    // var svgvalueK = svgObject.getElementById('valueK');
+    var valueK = 0.12;
+    var ia,nm;
     
     var ishunt = this.document.getElementById('ishunt');
     var ivalueRs = this.document.getElementById('ivalueRs');
@@ -29,7 +31,16 @@ window.addEventListener("load", function() {
     svgvalueCi.innerHTML = ivalueCi.value + " μF";
     var ivalueVcc = this.document.getElementById('ivalueVcc');
     svgvalueVcc.innerHTML = ivalueVcc.value + " V";
-    
+    var ivalueK = this.document.getElementById('ivalueK');
+    // svgvalueK.innerHTML = ivalueK.value;
+
+    function runSimAndUpdate(){
+        ia, nm = solveIaNm();
+        myChart.data.datasets[0].data = ia;
+        myChart.data.datasets[1].data = nm;
+        myChart.update();
+    }
+
     ishunt.addEventListener('change',(e)=>{
         if(e.target.checked){
             svgShort.style.display = 'none';
@@ -40,76 +51,55 @@ window.addEventListener("load", function() {
             svggRs.style.display   = 'none';
             ivalueRs.disabled = true;
         }
-        ia = solveIa();
-        myChart.data.datasets[0].data = ia;
-        vm = solveVm();
-        myChart.data.datasets[1].data = vm;
-        myChart.update();
+        runSimAndUpdate();
     });
 
     ivalueRs.addEventListener('change',(e)=>{
         valueRs = parseFloat(e.target.value);
         svgvalueRs.innerHTML = e.target.value + " Ω";
-        ia = solveIa();
-        myChart.data.datasets[0].data = ia;
-        vm = solveVm();
-        myChart.data.datasets[1].data = vm;
-        myChart.update();
+        runSimAndUpdate();
         // console.log(svgvalueRs, e.target.value);
     });
 
     ivalueRa.addEventListener('change',(e)=>{
         valueRa = parseFloat(e.target.value);
         svgvalueRa.innerHTML = e.target.value + " Ω";
-        ia = solveIa();
-        myChart.data.datasets[0].data = ia;
-        vm = solveVm();
-        myChart.data.datasets[1].data = vm;
-        myChart.update();
+        runSimAndUpdate();
         // console.log(svgvalueRs, e.target.value);
     });
 
     ivalueLa.addEventListener('change',(e)=>{
         valueLa = parseFloat(e.target.value);
         svgvalueLa.innerHTML = e.target.value + " μH";
-        ia = solveIa();
-        myChart.data.datasets[0].data = ia;
-        vm = solveVm();
-        myChart.data.datasets[1].data = vm;
-        myChart.update();
+        runSimAndUpdate();
         // console.log(svgvalueRs, e.target.value);
     });
 
     ivalueRc.addEventListener('change',(e)=>{
         valueRc = parseFloat(e.target.value);
-        svgvalueRc.innerHTML = e.target.value + " Ω";
-        ia = solveIa();
-        myChart.data.datasets[0].data = ia;
-        vm = solveVm();
-        myChart.data.datasets[1].data = vm;
-        myChart.update();
+        svgvalueRc.innerHTML = e.target.value + " Ω";
+        runSimAndUpdate();
         // console.log(svgvalueRs, e.target.value);
     });
 
     ivalueCi.addEventListener('change',(e)=>{
         valueCi = parseFloat(e.target.value);
         svgvalueCi.innerHTML = e.target.value + " μF";
-        ia = solveIa();
-        myChart.data.datasets[0].data = ia;
-        vm = solveVm();
-        myChart.data.datasets[1].data = vm;
-        myChart.update();
+        runSimAndUpdate();
         // console.log(svgvalueRs, e.target.value);
     });
 
     ivalueVcc.addEventListener('change',(e)=>{
         valueVcc = parseFloat(e.target.value);
         svgvalueVcc.innerHTML = e.target.value + " V";
-        ia = solveIa();
-        myChart.data.datasets[0].data = ia;
-        vm = solveVm();
-        myChart.data.datasets[1].data = vm;
-        myChart.update();
+        runSimAndUpdate();
+        // console.log(svgvalueRs, e.target.value);
+    });
+
+    ivalueK.addEventListener('change',(e)=>{
+        valueK = parseFloat(e.target.value);
+        // svgvalueK.innerHTML = e.target.value;
+        runSimAndUpdate();
         // console.log(svgvalueRs, e.target.value);
     });
 
@@ -120,37 +110,28 @@ window.addEventListener("load", function() {
 
 
     ts = range(0,0.3,0.0001);
-    function solveIa() {
+    function solveIaNm() {
+        var R1;
         if(ishunt.checked){
-            tauM = ((valueRa+valueRs)*valueRc/(valueRa+valueRs+valueRc))*valueCi*1e-6;
-            tauE = (valueLa*1e-6)/(valueRa+valueRc);
-            var I1 = valueVcc/(valueRa + valueRc + valueRs);
-            var I2 = (valueVcc*valueRc)/((valueRa+valueRs)*(valueRa+valueRc+valueRs));
-            var I3 = valueVcc/(valueRa+valueRs)    
+            R1 = valueRa + valueRs;
         } else {
-            tauM = (valueRa*valueRc/(valueRa+valueRc))*valueCi*1e-6;
-            tauE = (valueLa*1e-6)/(valueRa+valueRc);
-            var I1 = valueVcc/(valueRa + valueRc);
-            var I2 = (valueVcc*valueRc)/((valueRa)*(valueRa+valueRc));
-            var I3 = valueVcc/valueRa;
+            R1 = valueRa;
         }
+        tauM = (R1*valueRc/(R1+valueRc))*valueCi*1e-6;
+        tauE = (valueLa*1e-6)/(R1+valueRc);
+        var I1 = valueVcc/(R1 + valueRc);
+        var I2 = (valueVcc*valueRc)/((R1)*(R1+valueRc));
+        var I3 = valueVcc/R1;
         ia = ts.map((t)=>(
             I1 + I2*Math.exp(-t/tauM) - I3*Math.exp(-t/tauE)
             ));
-        return ia;
+        nm = ts.map((t,index)=>(
+            valueK*(valueVcc + ia[index]*(-R1 +(valueLa*1e-6/tauE)*Math.exp(-t/tauE)))
+            ));
+        return (ia,nm);
     }
 
-    function solveVm(){
-        if(ishunt.checked){
-            vm = ia.map((i)=>( valueVcc - i*valueRs ));
-        } else {
-            vm = ia.map((i)=>( valueVcc ));
-        }
-        return vm;
-    }
-    // console.log(t);
-    ia = solveIa();
-    vm = solveVm();
+    ia,nm = solveIaNm();
     var ctx = document.getElementById('simChart').getContext('2d');
     const plugin = {
         id: 'custom_canvas_background_color',
@@ -174,9 +155,9 @@ window.addEventListener("load", function() {
                 borderColor: 'rgb(50, 50, 192)',
                 pointRadius: 0
             },{
-                label: 'Tensão de terminal',
+                label: 'Velocidade de rotação',
                 yAxisID: 'B',
-                data: vm,
+                data: nm,
                 borderColor: 'rgb(192, 50, 50)',
                 pointRadius: 0
             }]
@@ -203,7 +184,7 @@ window.addEventListener("load", function() {
                     beginAtZero: true,
                     position: 'right',
                     title:{
-                        text:"Tensão [V]",
+                        text:"velocidade [RPM]",
                         display: true
                     }
                 },
@@ -226,13 +207,15 @@ window.addEventListener("load", function() {
         } else {
             text += '0';
         }
-        text += '\nRa: ' + valueRa 
-        +  '\nLa: ' + valueLa 
-        +  '\nRc: ' + valueRc 
-        +  '\nCi: ' + valueCi 
-        + '\n\nt: ' + ts.toString()
-        +'\n\nIa: ' + ia.toString()
-        +'\n\nVm: ' + vm.toString();
+        text += '\nRa: ' + valueRa
+        +  '\nLa: ' + valueLa
+        +  '\nRc: ' + valueRc
+        +  '\nCi: ' + valueCi
+        + '\n\nK: ' + valueK
+        + '\n\nTime [s]\tIa [A]\tnm [RPM]\n'
+        + ts.map((time, index) => (
+            time + '\t' + ia[index] + '\t' + nm[index]
+        )).join('\n');
         console.log(text);
             var blob = new Blob([text], {type:'text/plain;charset=utf-8'});
         saveAs(blob,'simData.txt');

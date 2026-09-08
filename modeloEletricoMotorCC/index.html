@@ -28,34 +28,41 @@
        <div class="flex-container">
            <div id="tipo", class="menuBox",style="width: 30%;">
                 <div>
-                    <input type="checkbox" id="ishunt" name="tipo" value="ishunt" checked></input>
+                    <input type="checkbox" id="ishunt" name="tipo" value="ishunt"></input>
                     <label for="ishunt">Resistor shunt</label>
                 </div>
                 <div>
+                    <h2>Valores</h2>
+                <div>
                    <input type="number" id="ivalueRs" name="ivalueRs" value="10"></input>
-                   <label for="ivalueRs">Valor do resistor shunt [Ω]</label>
+                   <label for="ivalueRs">Resistor shunt [Ω]</label>
                </div>
                <div>
                 <input type="number" id="ivalueRa" name="ivalueRa" value="12"></input>
-                <label for="ivalueRa">Valor do resistor de armadura [Ω]</label>
+                <label for="ivalueRa">Resistor de armadura [Ω]</label>
             </div>
             <div>
                 <input type="number" id="ivalueLa" name="ivalueLa" value="1000"></input>
-                <label for="ivalueLa">Valor do indutor de armadura [μH]</label>
+                <label for="ivalueLa">Indutor de armadura [μH]</label>
             </div>
             <div>
                 <input type="number" id="ivalueRc" name="ivalueRc" value="100"></input>
-                <label for="ivalueRs">Valor da resistência de carga [Ω]</label>
+                <label for="ivalueRc">Resistência de carga [Ω]</label>
             </div>
             <div>
-                <input type="number" id="ivalueCi" name="ivalueRc" value="1000"></input>
-                <label for="ivalueCi">Valor da capacitância de inércia [μF]</label>
+                <input type="number" id="ivalueCi" name="ivalueCi" value="1000"></input>
+                <label for="ivalueCi">Capacitância de inércia [μF]</label>
             </div>
             <div>
                 <input type="number" id="ivalueVcc" name="ivalueVcc" value="12"></input>
-                <label for="ivalueVcc">Valor da tensão usada no teste [V]</label>
+                <label for="ivalueVcc">Tensão usada no teste [V]</label>
+            </div>
+            <div>
+                <input type="number" id="ivalueK" name="ivalueK" value="0.12"></input>
+                <label for="ivalueK">Constante \(K'\phi\) do motor [RPM/V]</label>
             </div>
             <input type="button" id='saveBtn' value="Salvar"></input>
+                </div>
         </div>
         <div id="circuit", style="height:230px">
             <object data="motor.svg" type="image/svg+xml"
@@ -69,9 +76,9 @@
             <p> O resistor \(R_S\) é um resistor shunt, usado para medição da corrente num motor real.</p>
             <p>A resistência de armadura \(R_A\) e a indutância de armadura \(L_A\) são parâmetros elétricos do enrolamento de armadura do motor.</p>
             <p>Já a resistência \(R_C\) e a capacitância \(C_i\), são modelos elétricos da resistência mecânica \(D\) e da inércia \(J_M\), respectivamente, do conjunto rotor-carga:</p>
-            \[R_C = {K^2 \over D}\]
-            \[C_i = K^2J_M\]
-            onde \(K\) é a constante do motor.
+            \[R_C = {(K\phi)^2 \over D}\]
+            \[C_i = (K\phi)^2J_M\]
+            onde \(\phi\) é o fluxo magnético e \(K\) é a constante do motor. Esta constante relaciona o tensão induzida no motor com a velocidade de rotação do rotor em rad/s. A constante \(K'\) considera a velocidade em RPM.
        </div>
     </div>
     <div class="footer">Feito por João Paulo Cerquinho Cajueiro. <a href="LICENSE.txt">Licença de uso.</a></div>
