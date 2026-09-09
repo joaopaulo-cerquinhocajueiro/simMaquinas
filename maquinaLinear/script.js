@@ -1,15 +1,17 @@
 // Parâmetros da simulação
 let params = {
+    mode: 0, // 0: Limitado por tempo, 1: Limitado por distância
     VB: 200,
     Fapl: 0,
     R: 1.0,
     B: 0.2,
     l: 0.1,
     m: 0.5,
-    T: 500,
-    dt: 0.1
+    T: 0.500,
+    d: 4.0,
+    dt: 0.5
 };
-
+let results = null;
 // Função para atualizar os valores exibidos dos sliders
 function updateSliderValues() {
     document.getElementById('Fapl-value').textContent = params.Fapl.toFixed(2);
@@ -18,10 +20,12 @@ function updateSliderValues() {
     document.getElementById('l-value').textContent = params.l.toFixed(2);
     document.getElementById('m-value').textContent = params.m.toFixed(3);
     document.getElementById('VB-value').textContent = params.VB.toFixed(2);
+    document.getElementById('T-value').textContent = params.T.toFixed(1);
+    document.getElementById('d-value').textContent = params.d.toFixed(2);
 }
 
 // Função principal da simulação
-function maquinaLinear(VB, Fapl, R, B, l, m, T, dt) {
+function maquinaLinear(mode=0, VB, Fapl, R, B, l, m, T, d) {
     const v0 = 0;
     let index = 0;
     const t0 = 0;
@@ -31,13 +35,15 @@ function maquinaLinear(VB, Fapl, R, B, l, m, T, dt) {
     const i = [];
     const Find = [];
     const v = [v0];
+    let d_total = 0;
     const Pen = [];
     const Pconv = [];
     let Een = 0;
     let Econv = 0;
+    let dt = T/ 1000.0; // Ajusta dt para simulação limitada por distância
     
     // Simulação numérica
-    while (index * dt <= T) {
+    while (mode === 0 ? (index * dt <= T) : ((d_total <= d) && (d_total>=0.0))) {
         t.push(t0 + index * dt);
         
         // Tensão induzida
@@ -65,6 +71,9 @@ function maquinaLinear(VB, Fapl, R, B, l, m, T, dt) {
         // Nova velocidade
         v.push(v[index] + a * dt);
         
+        // Atualiza a distância total percorrida
+        d_total += v[index] * dt;
+        
         index++;
     }
 
@@ -80,7 +89,8 @@ function maquinaLinear(VB, Fapl, R, B, l, m, T, dt) {
 
 // Função para atualizar os gráficos
 function updateGraphs() {
-    const results = maquinaLinear(
+    results = maquinaLinear(
+        params.mode,
         params.VB,
         params.Fapl,
         params.R,
@@ -88,7 +98,7 @@ function updateGraphs() {
         params.l,
         params.m,
         params.T,
-        params.dt
+        params.d
     );
     
     // Atualizar resultados finais
@@ -247,6 +257,24 @@ document.getElementById('l').addEventListener('input', function(e) {
 
 document.getElementById('m').addEventListener('input', function(e) {
     params.m = parseFloat(e.target.value);
+    updateSliderValues();
+    updateGraphs();
+});
+
+document.getElementById('T').addEventListener('input', function(e) {
+    params.T = parseFloat(e.target.value);
+    updateSliderValues();
+    updateGraphs();
+});
+
+document.getElementById('d').addEventListener('input', function(e) {
+    params.d = parseFloat(e.target.value);
+    updateSliderValues();
+    updateGraphs();
+});
+
+document.getElementById('mode').addEventListener('change', function(e) {
+    params.mode = e.target.checked ? 1 : 0; // 1: Limitado por distância, 0: Limitado por tempo
     updateSliderValues();
     updateGraphs();
 });
