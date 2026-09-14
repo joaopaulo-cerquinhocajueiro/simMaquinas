@@ -193,15 +193,16 @@ window.addEventListener("load", function() {
                     beginAtZero: true,
                     position: 'right',
                     title:{
-                        text:"velocidade [RPM]",
-                        display: true
+                        text:"Velocidade [RPM]",
+                        display: true,
+                        rotation: 90
                     }
-                },
+                }
+            },
             elements: {
                 point:{
                     radius:0
                 }
-            }
             },
             responsive: true
         },
