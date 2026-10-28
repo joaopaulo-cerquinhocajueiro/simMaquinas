@@ -8,6 +8,10 @@ const ctxDQ  = canvasDQ.getContext('2d');
 const ctxR   = canvasR.getContext('2d');
 
 let t = 0;
+// Variável de estado mantida entre as chamadas (escopo global ou da classe/módulo)
+let theta = 0;
+const dt = 0.02; // Intervalo de tempo para atualização (20ms)
+
 const buffer = { a: [], b: [], c: [] };
 const N = 300;
 
@@ -56,12 +60,83 @@ window.addEventListener('resize', resizeAll);
 resizeAll();
 
 // Cálculo dos Componentes d-q
-function calcDQ(motor, T) {
+// Physical Motor Parameters (Example default values)
+const motorParams = {
+    p: 2,              // Pole pairs
+    lambda_pm: 0.175,  // Permanent magnet flux linkage [Wb]
+    Ld_ipm: 0.002,     // D-axis inductance for IPM [H]
+    Lq_ipm: 0.006,     // Q-axis inductance for IPM [H] (Ld < Lq)
+    Ld_synrm: 0.012,   // D-axis inductance for SynRM [H]
+    Lq_synrm: 0.003,   // Q-axis inductance for SynRM [H] (Ld > Lq)
+    Lm_im: 0.045,      // Magnetizing inductance IM [H]
+    Lr_im: 0.050,      // Rotor total inductance IM [H]
+    id_im_nom: 2.5,    // Nominal magnetizing current IM [A]
+    w_rated: 314.16    // Rated electrical speed (~3000 RPM) [rad/s]
+};
+
+/**
+ * Calculates d-q axis currents based on machine topology, torque, and electrical speed.
+ * @param {string} motor - Machine type ('spm', 'ipm', 'ind', 'rel')
+ * @param {number} T - Target electromagnetic torque [Nm]
+ * @param {number} w - Electrical angular speed [rad/s]
+ * @param {object} params - Motor parameter set
+ * @returns {{id: number, iq: number}} - Calculated d and q axis currents [A]
+ */
+function calcDQ(motor, T, w = 0) {
     let id = 0, iq = 0;
-    if (motor === 'spm') { id = 0; iq = T; }
-    if (motor === 'ipm') { iq = T / 1.5; id = -0.5 * iq; }
-    if (motor === 'rel') { iq = Math.sqrt(T); id = -iq * Math.sign(T); }
-    if (motor === 'ind') { id = 1; iq = T; }
+    
+    // Rated electrical speed threshold (e.g., ~1800 RPM = 188.5 rad/s)
+    const w_rated = 1.5; 
+    const absW = w;
+    // const absW = Math.abs(w);
+    
+    // Field weakening factor (scales down currents above rated speed)
+    const fwFactor = (absW > w_rated) ? (w_rated / absW) : 1.0;
+    console.log(T,absW,fwFactor);
+
+    if (motor === 'spm') {
+        // SPM: Field weakening injects negative Id to counteract PM flux above rated speed
+        if (absW > w_rated) {
+            id = -1.5 * (1 - fwFactor); // Injects negative Id as speed increases
+            iq = T * fwFactor;           // Iq reduced due to voltage limit
+        } else {
+            id = 0;
+            iq = T;
+        }
+    }
+
+    if (motor === 'ipm') {
+        // IPM: Base MTPA trajectory scaled by field weakening
+        const iq_base = T / 1.5;
+        const id_base = -0.5 * iq_base;
+
+        if (absW > w_rated) {
+            // More negative Id injected for flux weakening at high speeds
+            id = id_base - 1.0 * (1 - fwFactor); 
+            iq = iq_base * fwFactor;
+        } else {
+            id = id_base;
+            iq = iq_base;
+        }
+    }
+
+    if (motor === 'rel') {
+        // SynRM: Currents scale down at field weakening to respect voltage limit
+        const iq_base = Math.sqrt(Math.abs(T));
+        const id_base = -iq_base * Math.sign(T);
+
+        id = id_base * fwFactor;
+        iq = iq_base * fwFactor;
+    }
+
+    if (motor === 'ind') {
+        // IM: Id represents magnetizing flux. 
+        // Above rated speed, Id is reduced proportionally to 1/w (Field Weakening)
+        const id_nominal = 1.0;
+        id = id_nominal * fwFactor; 
+        iq = T; // Iq remains proportional to torque requirement
+    }
+
     return { id, iq };
 }
 
@@ -238,25 +313,35 @@ function drawInductionRotor(ctx, R) {
 
 // Loop Principal de Animação
 function animate() {
-    t += 0.02;
 
+    t += dt;
+    
     const motor = document.getElementById('motor').value;
     const T     = parseFloat(document.getElementById('torque').value);
     const rpm   = parseFloat(document.getElementById('speed').value);
 
     const w = rpm * 2 * Math.PI / 60;
-    const { id, iq } = calcDQ(motor, T);
+    
+    theta += w*dt;
+    theta %= 2 * Math.PI;
+    
+    const { id, iq } = calcDQ(motor, T,w);
 
     document.getElementById('dqread').innerHTML = `Id = ${id.toFixed(2)} A | Iq = ${iq.toFixed(2)} A`;
 
     // Atualização dos Sinais Trifásicos (abc)
-    const ia = id * Math.cos(w * t) - iq * Math.sin(w * t);
-    const ib = id * Math.cos(w * t - 2 * Math.PI / 3) - iq * Math.sin(w * t - 2 * Math.PI / 3);
-    const ic = id * Math.cos(w * t + 2 * Math.PI / 3) - iq * Math.sin(w * t + 2 * Math.PI / 3);
+    const ia = id * Math.cos(theta) - iq * Math.sin(theta);
+    const ib = id * Math.cos(theta - (2 * Math.PI / 3)) - iq * Math.sin(theta - (2 * Math.PI / 3));
+    const ic = id * Math.cos(theta + (2 * Math.PI / 3)) - iq * Math.sin(theta + (2 * Math.PI / 3));
 
-    buffer.a.push(ia); buffer.b.push(ib); buffer.c.push(ic);
+    buffer.a.push(ia);
+    buffer.b.push(ib);
+    buffer.c.push(ic);
+    
     if (buffer.a.length > N) {
-        buffer.a.shift(); buffer.b.shift(); buffer.c.shift();
+        buffer.a.shift();
+        buffer.b.shift();
+        buffer.c.shift();
     }
 
     // 1. Renderiza Osciloscópio

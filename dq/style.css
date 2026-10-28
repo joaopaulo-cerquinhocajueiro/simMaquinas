@@ -68,3 +68,43 @@ canvas {
     min-height: 0;
     display: block;
 }
+
+.slider-container {
+  position: relative;
+  display: inline-block;
+  width: 100%; /* Ajuste para a largura desejada do seu slider */
+}
+
+.slider-container input[type="range"] {
+  width: 100%;
+  margin: 0;
+  display: block;
+}
+
+/* 1. Texto "Nominal" acima da barra */
+.slider-container::before {
+  content: "Nominal";
+  position: absolute;
+  top: -10px;         /* Posição acima do slider */
+  left: 50%;          /* 50% = valor 15 na escala de 0 a 30 */
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-family: sans-serif;
+  font-weight: bold;
+  color: #555;
+  pointer-events: none;
+}
+
+/* Marcação vertical da velocidade nominal */
+.slider-container::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%; /* 50% representa o valor 15 na escala de 0 a 30 */
+  transform: translate(-50%, -50%);
+  width: 2px;             /* Espessura da barra vertical */
+  height: 14px;           /* Altura da barra vertical */
+  background-color: #ff3b30; /* Cor da marcação (ex: vermelho) */
+  pointer-events: none;   /* Permite clicar através da barra no slider */
+  z-index: 1;
+}
