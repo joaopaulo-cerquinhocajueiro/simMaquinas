@@ -10,6 +10,7 @@ const ctxR   = canvasR.getContext('2d');
 let t = 0;
 // Variável de estado mantida entre as chamadas (escopo global ou da classe/módulo)
 let theta = 0;
+let thetaRotor = 0;
 const dt = 0.02; // Intervalo de tempo para atualização (20ms)
 
 const buffer = { a: [], b: [], c: [] };
@@ -325,6 +326,12 @@ function animate() {
     theta += w*dt;
     theta %= 2 * Math.PI;
     
+    // For the induction motor, calculate the rotor speed considering slip
+    const slip = 0.08; // Escorregamento de 8%
+    const wr = w * (1 - slip); // Velocidade do rotor
+    thetaRotor += wr*dt; // Ângulo do rotor
+    thetaRotor %= 2 * Math.PI;
+
     const { id, iq } = calcDQ(motor, T,w);
 
     document.getElementById('dqread').innerHTML = `Id = ${id.toFixed(2)} A | Iq = ${iq.toFixed(2)} A`;
@@ -428,7 +435,7 @@ ctxR.fill();
 // ----------------------------------------------------
 ctxR.save();
 const alpha = Math.min(1, Math.max(0.15, 0.3 + (T / 20.0) * 0.9));
-ctxR.rotate(w * t-0.0); // Faz o campo magnético girar
+ctxR.rotate(theta/2-0.0); // Faz o campo magnético girar
 
 const numPolos = 4;
 const anguloPolo = (2 * Math.PI) / numPolos;
@@ -457,10 +464,9 @@ ctxR.restore(); // Restaura rotação do campo
 ctxR.save();
 
 // Tratamento de Escorregamento para Motor de Indução (Rotor gira um pouco mais devagar que o campo)
-let rotorAngle = w * t;
+let rotorAngle = theta/2;
 if (motor === 'ind') {
-    const slip = 0.08; // Escorregamento de 8%
-    rotorAngle = rotorAngle * (1 - slip);
+    rotorAngle = thetaRotor/2;
 } else if (motor === 'rel') {
     rotorAngle = rotorAngle - 0.9;
 }
